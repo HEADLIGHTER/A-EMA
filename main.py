@@ -1,18 +1,10 @@
-import dearpygui.dearpygui as dpg
+from pyad import *
 
-def save_callback():
-	print("Save Clicked")
 
-dpg.create_context()
-dpg.create_viewport()
-dpg.setup_dearpygui()
+def ad_auth(adserver: str, login: str, passwd: str):
+	pyad.set_defaults(ldap_server=adserver, username=login, password=passwd)
 
-with dpg.window(label="Example Window"):
-	dpg.add_text("Hello world")
-	dpg.add_button(label="Save", callback=save_callback)
-	dpg.add_input_text(label="string")
-	dpg.add_slider_float(label="float")
 
-dpg.show_viewport()
-dpg.start_dearpygui()
-dpg.destroy_context()
+def ad_create_user(login: str, fname: str, lname: str, passwd: str, group: str, ad_sld: str, ad_tld: str, email: str):
+	ad_group = pyad.adcontainer.from_dn("ad_group=" + group + ", dc=" + ad_sld + ", dc=" + ad_tld)
+	new_user = pyad.aduser.ADUser.create(login, ad_group, password=passwd)
